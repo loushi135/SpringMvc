@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+  xmlns:beans="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+		
+		<http pattern="/images/**"  security="none" />
+        <http pattern="/css/**" security="none"/>
+        <http pattern="/js/**" security="none"/>
+        <http pattern="/403*" security="none"/>
+        <http pattern="/404*" security="none"/>
+        <http pattern="/500*" security="none"/> 
+        
+		<http use-expressions="true"  auto-config="true" access-denied-page="/index.jsp"  >
+			<intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
+			<form-login default-target-url="/main.jsp" always-use-default-target='true' login-page="/index.jsp" login-processing-url="/j_security_check" />
+        	<logout logout-url="/j_logout.do" logout-success-url="/index.jsp"/> 
+		</http>
+		
+		<authentication-manager >
+		    <authentication-provider>
+		      <user-service>
+		        <user name="admin" password="123456" authorities="ROLE_USER, ROLE_ADMIN" />
+		        <user name="admin" password="admin" authorities="ROLE_USER" />
+		      </user-service>
+		    </authentication-provider>
+		 </authentication-manager>
+		 
+		 <!-- enable the spring security annotations
+    <global-method-security secured-annotations="enabled" pre-post-annotations="enabled">  
+        <expression-handler ref="expressionHandler"/>  
+    </global-method-security>  
+       -->  
+    <!-- override the default permissionEvaluator bean used by Spring Security with our custom RavePermissionEvaluator
+    <bean id="expressionHandler" class="org.apache.rave.portal.security.impl.RaveMethodSecurityExpressionHandler">  
+        <property name="permissionEvaluator" ref="ravePermissionEvaluator" />              
+    </bean>  
+		  -->  
+</beans:beans>
